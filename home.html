@@ -1,0 +1,127 @@
+<html>
+  <head></head>
+  <body>
+    <script>
+      function inicializarDom(params) {
+        const h1 = document.createElement('h1');
+        h1.textContent = 'Busca en el libro de Génesis';
+        document.body.appendChild(h1);
+
+        // salto de linea
+        document.body.appendChild(document.createElement('br'));
+
+        // Creamos el elemento input y lo agregamos al DOM
+        const input = document.createElement("input");
+        input.id = "input";
+        document.body.appendChild(input);
+
+        // Asignamos un valor al input
+        input.value = "Dios";
+
+        // Creamos el botón
+        const btnBuscar = document.createElement("button");
+        // Asignamos un ID al botón
+        btnBuscar.id = "btn-buscar";
+        // Asignamos el texto del botón
+        btnBuscar.innerText = "Buscar";
+
+        // Agregamos el botón al DOM
+        document.body.appendChild(btnBuscar);
+
+        // agregar un span al dom
+        const span = document.createElement("span");
+        span.id = "span";
+        span.innerText = "Aquí están tus resultados:";
+        // agrego salto de linea antes del span
+        document.body.appendChild(document.createElement("br"));
+        // otro salto de linea
+        document.body.appendChild(document.createElement("br"));
+        document.body.appendChild(span);
+      }
+
+      inicializarDom();
+
+      class Libro {
+        constructor(nombre, numeroDeCapitulos, versiculos) {
+          this.nombre = nombre;
+          this.numeroDeCapitulos = numeroDeCapitulos;
+          this.versiculos = versiculos;
+        }
+
+        agregarVersiculo(versiculo) {
+          // Asignamos el libro al versículo
+          versiculo.libro = this;
+          this.versiculos.push(versiculo);
+        }
+
+        buscar(texto) {
+          for (let i = 0; i < this.versiculos.length; i++) {
+            if (this.versiculos[i].texto.includes(texto)) {
+              return this.versiculos[i];
+            }
+          }
+
+          return null;
+        }
+      }
+
+      class Versiculo {
+        constructor(capítulo, versículo, texto) {
+          this.capítulo = capítulo;
+          this.versículo = versículo;
+          this.texto = texto;
+        }
+
+        mostrar() {
+          // obten el span
+          const span = document.getElementById("span");
+          span.innerText += `\n${this.libro.nombre} ${this.capítulo}:${this.versículo} - ${this.texto}`;
+        }
+      }
+
+      // Creamos el objeto libro
+      const libro = new Libro("Génesis", 50, []);
+
+      // Creamos los versículos sin asignarles un libro
+      const versiculo1 = new Versiculo(
+        1,
+        1,
+        "En el principio crió Dios los cielos y la tierra."
+      );
+      const versiculo2 = new Versiculo(
+        1,
+        2,
+        "Y la tierra estaba desordenada y vacía, y las tinieblas estaban sobre la faz del abismo, y el Espíritu de Dios se movía sobre la faz de las aguas."
+      );
+
+      // Agregamos los versículos al libro
+      libro.agregarVersiculo(versiculo1);
+      libro.agregarVersiculo(versiculo2);
+
+      // Función que se ejecutará cuando se dispare el evento click
+      function buscar() {
+        // Obtenemos el valor del input de busqueda
+        const texto = input.value;
+
+        // Realizamos la busqueda
+        const resultado = libro.buscar(texto);
+
+        // Mostramos el resultado en la consola
+        if (resultado) {
+          resultado.mostrar();
+        } else {
+          const mensaje = `No se encontró el texto "${texto}"`;
+          // obten el span
+          const span = document.getElementById("span");
+          // añadir el mensaje en el span con un salto de linea
+          span.innerText += `\n${mensaje}`;
+        }
+      }
+
+      // obtenemos el botón
+      const btnBuscar = document.getElementById("btn-buscar");
+      // Asignamos un evento click al botón
+      btnBuscar.addEventListener("click", buscar);
+    </script>
+  </body>
+</html>
